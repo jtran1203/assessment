@@ -43,32 +43,31 @@ function getMostPopularBooks(books) {
 
 function getMostPopularAuthors(books, authors) {
 
-    books.forEach((book) => {
-      let number = book.borrows.length
-      let findAuthor = authors.find((person) => person.id === book.authorId);
-      let writer = `${findAuthor.name.first} ${findAuthor.name.last}`
-      book['name'] = writer;
-      book['count'] = number;
-    })
-    let firstArr = books.map(({ name, count }) => ({name, count}))
-    let content = []
-    firstArr.forEach((item) => {
-      if (content.some((obj) => obj.name === item.name)) {
-        for (let i = 0; i <content.length; i++) {
-          if (content[i].name === content.name) {
-            content[i].count += item.count
-          }
-        }
-      } else {
-        let newObject = {}
-        newObject.name = item.name;
-        newObject.count = item.count;
-      content.push(newObject);
+  const authorCount = books.reduce( (acc, book) => {
+      const authorId = book.authorId;
+      if( acc[authorId] ){
+        acc[authorId] += book.borrows.length
       }
-    })
-    content.sort((a, b) => b.count - a.count)
-    return content.slice(0,5)
-   
+      else{
+        acc[authorId] = book.borrows.length
+      }
+      return acc
+    }, {})
+  
+   const content = []
+  
+   for( let key in authorCount ){
+     const authorInfo = authors.find( (author) => author.id == key )
+     const author = {
+       name : `${authorInfo.name.first} ${authorInfo.name.last}`,
+       count : authorCount[key]
+     };
+     content.push(author )
+   }
+  
+  content.sort( (a,b) => b.count - a.count)
+  return content.splice(0,5)
+  
 }
 module.exports = {
   getTotalBooksCount,

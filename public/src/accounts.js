@@ -21,18 +21,37 @@ return accounts.sort(function(a, b) {
 }); 
 }
 
+
+function count ( borrowsArray, accountId ){
+	let total = 0
+	borrowsArray.forEach(borrow => {
+      if (borrow.id === accountId) {
+      	total++
+      }
+    });
+    return total
+}
 function getTotalNumberOfBorrows(account, books) {
   let borrowAccount = 0;
-  accountId = account.id
-  books.forEach((book)=>{
-    book.borrows.forEach((borrow)=>{
-      if(accountId === borrow.id){
-        borrowAccount +=1
-      }
-    })
-  })
+  for (let i = 0; i < books.length; i++) {
+    let borrows = books[i].borrows
+    borrowAccount += count ( borrows, account.id )
+  }
   return borrowAccount
 }
+
+// function getTotalNumberOfBorrows(account, books) {
+//   let borrowAccount = 0;
+//   accountId = account.id
+//   books.forEach((book)=>{
+//     book.borrows.forEach((borrow)=>{
+//       if(accountId === borrow.id){
+//         borrowAccount +=1
+//       }
+//     })
+//   })
+//   return borrowAccount
+// }
 
  function getBooksPossessedByAccount(account, books, authors) {
   let booksTaken = []; 
